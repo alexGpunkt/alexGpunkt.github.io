@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applet Layout</title>
+    <!--<link rel="stylesheet" href="styles.css">-->
+</head>
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh; /* Sicherstellen, dass der Body die volle Höhe des Viewports einnimmt */
+    position: relative; /* Für die absolute Positionierung der Eckbilder */
+    font-family: 'Georgia', serif;
+    background-color: #1f2126;
+    color: #ece6ee;
+    overflow-x: hidden; /* Horizontales Scrollen verhindern */
+}
+
+/* Corner Images */
+.corner-image {
+    position: absolute;
+    width: 120px;
+    height: auto;
+    z-index: 10;
+}
+
+.corner-image.bottom-left {
+    bottom: 0; /* Ganz unten positionieren */
+    left: 0;   /* Ganz links positionieren */
+	position: fixed;
+    bottom: 0;
+    z-index: 1000;
+}
+
+.corner-image.bottom-right {
+    bottom: 0; /* Ganz unten positionieren */
+    right: 0;  /* Ganz rechts positionieren */
+	position: fixed;
+    bottom: 0;
+    z-index: 1000;
+}
+
+.corner-image.top-left {
+    top: 0;
+    left: 0;
+}
+
+.corner-image.top-right {
+    top: 0;
+    right: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    /* padding: 10px;*/
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.text-field {
+    width: 30%;
+    padding: 10px;
+    background-color: #ece6ee;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.iframe-container {
+    width: 40%;
+    position: relative;
+}
+
+.applet-container {
+    position: relative;
+}
+
+.preloader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+iframe {
+    display: none; /* Unsichtbar bis geladen */
+}
+</style>
+<body>
+    <!-- Corner Images -->
+    <img src="Oben-LinksX.png" alt="Corner Image 1" class="corner-image top-left">
+    <img src="Oben-RechtsX.png" alt="Corner Image 2" class="corner-image top-right">
+    <img src="unten-linksX.png" alt="Corner Image 3" class="corner-image bottom-left">
+    <img src="unten-rechtsX.png" alt="Corner Image 4" class="corner-image bottom-right">
+
+    <div class="container">
+        <!-- Zeile 1 -->
+        <div class="row">
+            <div class="text-field">
+                <p>Linker Textbereich: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+            <div class="iframe-container">
+                <div class="applet-container">
+                    <div class="preloader">
+                        <img src="logo-mini2.png" alt="Lade..." />
+                    </div>
+                    <iframe
+                        id="applet1"
+						title="TicTacToe" 
+						src="https://www.geogebra.org/material/iframe/id/p3hbemvz/width/690/height/713/border/888888/sfsb/true/smb/false/stb/false/stbh/false/ai/false/asb/false/sri/false/rc/false/ld/false/sdz/false/ctl/false"
+						width="400px"
+						height="413px" 
+                        style="border: none;"
+                        allowfullscreen
+                    ></iframe>
+                </div>
+            </div>
+            <div class="text-field">
+                <p>Rechter Textbereich: Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+        </div>
+
+        <!-- Zeile 2 -->
+        <div class="row">
+            <div class="text-field">
+                <p>Linker Textbereich: Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+            </div>
+            <div class="iframe-container">
+                <div class="applet-container">
+                    <div class="preloader">
+                        <img src="logo-mini2.png" alt="Lade..." />
+                    </div>
+                    <iframe
+                        id="applet2"
+						title="HanoisTürme" 
+						src="https://www.geogebra.org/material/iframe/id/tepkvhkr/width/812/height/670/border/888888/sfsb/true/smb/false/stb/false/stbh/false/ai/false/asb/false/sri/false/rc/false/ld/false/sdz/false/ctl/false"						
+						width="400px" 
+						height="316px" 
+                        style="border: none;"
+                        allowfullscreen
+                    ></iframe>
+                </div>
+            </div>
+            <div class="text-field">
+                <p>Rechter Textbereich: Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const iframes = document.querySelectorAll("iframe");
+
+    iframes.forEach((iframe) => {
+        iframe.addEventListener("load", () => {
+            const preloader = iframe.closest(".applet-container").querySelector(".preloader");
+            if (preloader) {
+                preloader.style.display = "none"; // Preloader ausblenden
+            }
+            iframe.style.display = "block"; // Applet sichtbar machen
+        });
+    });
+});
+
+</script>
+</html>
