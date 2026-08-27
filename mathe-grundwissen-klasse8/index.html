@@ -6,7 +6,12 @@
   <meta name="theme-color" content="#101827">
   <meta name="description" content="Mathematik-Grundwissentrainer für den Beginn der Klasse 8 – Berlin, Sek I.">
   <title>CHH Mathe – Grundwissen Klasse 8</title>
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css?v=3">
+  <style>
+    .eval-overview{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.eval-overview>div{border:1px solid var(--line);border-radius:14px;background:#081421;padding:10px 5px;text-align:center}.eval-overview b,.eval-overview small{display:block}.eval-overview b{font-size:19px}.eval-overview small{font-size:8px;color:var(--muted);margin-top:2px}.eval-meta{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:9px}.eval-meta b{color:var(--text)}.stats-shell{width:min(94vw,620px)}.stats-shell h3{font-size:11px;margin:2px 0 0;color:var(--text)}.eval-rows{display:grid;gap:7px}.eval-row{border:1px solid var(--line);border-radius:12px;background:#081421;padding:8px}.eval-row-head{display:flex;justify-content:space-between;gap:8px;align-items:center}.eval-row-head b{font-size:10px}.eval-row-head span{font-size:8px;color:var(--muted);white-space:nowrap}.eval-bar{height:6px;border-radius:999px;background:#07111f;overflow:hidden;margin-top:6px}.eval-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--blue),var(--cyan))}.eval-levels{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.eval-level{border:1px solid var(--line);border-radius:12px;background:#081421;padding:8px;text-align:center}.eval-level b,.eval-level span{display:block}.eval-level b{font-size:9px}.eval-level span{font-size:8px;color:var(--muted);margin-top:2px}@media(max-width:430px){.eval-overview{grid-template-columns:repeat(2,1fr)}.eval-levels{grid-template-columns:1fr}.eval-meta{flex-direction:column;gap:3px}}
+  </style>
 </head>
 <body>
   <div id="app">
@@ -15,7 +20,7 @@
       <div class="brand"><div class="brand-mark">∑</div><div><strong>Mathe Grundwissen</strong><small>Start Klasse 8 · Berlin</small></div></div>
       <button class="icon-btn calc-shortcut" id="calcShortcut" aria-label="Taschenrechner öffnen" title="Taschenrechner">⌗</button>
     </header>
-    <main id="mainView" aria-live="polite"><noscript>Für den Trainer muss JavaScript aktiviert sein.</noscript></main>
+    <main id="mainView" aria-live="polite"></main>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <div id="drawerBackdrop" class="backdrop" hidden></div>
     <aside id="drawer" class="drawer" aria-label="Hauptmenü" aria-hidden="true">
@@ -26,10 +31,15 @@
         <button data-level="e"><b>Erweiterungskurs</b><span>RLP E · anspruchsvoller</span></button>
       </div></div>
       <div class="drawer-actions">
-        <button id="menuHome">⌂ <span>Startseite</span></button><button id="menuCalc">⌗ <span>Taschenrechner</span></button><button id="menuQr">▦ <span>QR-Code dieser Seite</span></button><button id="menuRlp">≡ <span>RLP & Themen</span></button><button id="menuReset">↺ <span>Lernstand zurücksetzen</span></button>
+        <button id="menuHome">⌂ <span>Startseite</span></button>
+        <button id="menuStats">▥ <span>Auswertung</span></button>
+        <button id="menuCalc">⌗ <span>Taschenrechner</span></button>
+        <button id="menuQr">▦ <span>QR-Code dieser Seite</span></button>
+        <button id="menuRlp">≡ <span>RLP & Themen</span></button>
+        <button id="menuReset">↺ <span>Lernstand zurücksetzen</span></button>
       </div>
-      <label class="toggle-row"><span><b>Zusatzthemen</b><small>nur wenn bereits behandelt</small></span><input id="advancedToggle" type="checkbox"><i></i></label>
-      <div class="drawer-foot"><span>v1.1</span><span>Fortschritt bleibt auf diesem Gerät.</span></div>
+      <label class="toggle-row" title="Zusatzthemen der Niveaustufe E, deren Behandlung in Klasse 7 von der schulinternen Reihenfolge abhängt."><span><b>Zusatzthemen</b><small>nur wenn bereits behandelt</small></span><input id="advancedToggle" type="checkbox"><i></i></label>
+      <div class="drawer-foot"><span id="versionLabel">v1.2</span><span>Fortschritt bleibt auf diesem Gerät.</span></div>
     </aside>
 
     <dialog id="calcDialog" class="modal calc-modal"><form method="dialog" class="modal-shell">
@@ -47,7 +57,7 @@
 
     <dialog id="qrDialog" class="modal"><form method="dialog" class="modal-shell compact-modal">
       <div class="modal-head"><div><small>Teilen</small><h2>QR-Code</h2></div><button class="icon-btn plain" value="cancel" aria-label="Schließen">×</button></div>
-      <div id="qrCode" class="qr-box"></div><p class="qr-url" id="qrUrl"></p><p class="muted center">Der QR-Code führt zur aktuell geöffneten Website.</p>
+      <div id="qrCode" class="qr-box"></div><p class="qr-url" id="qrUrl"></p><p class="muted center">Der Code wird automatisch aus der aktuell geöffneten Website-Adresse erzeugt.</p>
     </form></dialog>
 
     <dialog id="infoDialog" class="modal"><form method="dialog" class="modal-shell info-shell">
@@ -55,18 +65,27 @@
       <div class="rlp-summary"><div><b>Lernen</b><span>Niveaustufe D</span></div><div><b>Grundkurs</b><span>D–E</span></div><div><b>Erweiterung</b><span>E</span></div></div>
       <div class="info-grid">
         <article><b>Zahlen & Operationen</b><span>Grundrechenarten, Brüche, Dezimalzahlen, Teilbarkeit; E: rationale Zahlen und Prozentrechnung.</span></article>
-        <article><b>Größen & Messen</b><span>Einheiten, Umfang, Fläche, Volumen, Maßstab und zusammengesetzte Größen.</span></article>
+        <article><b>Größen & Messen</b><span>Einheiten, Umfang, Fläche, Volumen; maßstäbliche und zusammengesetzte Größen.</span></article>
         <article><b>Raum & Form</b><span>Winkel, Dreiecke, Symmetrie, Koordinaten, Kongruenz und geometrische Beziehungen.</span></article>
-        <article><b>Gleichungen & Funktionen</b><span>Terme, Gleichungen, direkte und indirekte Proportionalität.</span></article>
-        <article><b>Daten & Zufall</b><span>Diagramme, Kennwerte, Häufigkeiten, Zufallsexperimente und Kombinatorik.</span></article>
-        <article><b>BBR-Stil</b><span>Neu formulierte, alltagsbezogene Aufgaben im Stil zentraler Prüfungen.</span></article>
+        <article><b>Gleichungen & Funktionen</b><span>Terme, Gleichungen, direkte Proportionalität; E: Verhältnisgleichungen und indirekte Proportionalität.</span></article>
+        <article><b>Daten & Zufall</b><span>Diagramme, Kennwerte, Häufigkeiten, einfache Zufallsexperimente und Kombinatorik.</span></article>
+        <article><b>BBR-Stil</b><span>Neu formulierte, alltagsbezogene Aufgaben im Stil zentraler Prüfungen – nur mit bereits bekanntem Stoff.</span></article>
       </div>
-      <p class="source-note">Grundlage: Fachteil C Mathematik des Rahmenlehrplans Berlin-Brandenburg, amtliche Fassung 2023. Inhalte der Doppeljahrgangsstufe 7/8, die schulabhängig noch nicht behandelt wurden, sind als Zusatzthemen zuschaltbar.</p>
+      <p class="source-note">Grundlage: Fachteil C Mathematik des Rahmenlehrplans Berlin-Brandenburg, amtliche Fassung 2023. Die Doppeljahrgangsstufe 7/8 lässt schulinterne Reihenfolgen zu; deshalb sind weiterführende E-Themen standardmäßig ausgeschaltet.</p>
     </form></dialog>
 
-    <dialog id="confirmDialog" class="modal"><form method="dialog" class="modal-shell compact-modal"><div class="modal-head"><div><small>Lernstand</small><h2>Zurücksetzen?</h2></div></div><p>Alle auf diesem Gerät gespeicherten Treffer und Fehler werden gelöscht.</p><div class="dialog-actions"><button value="cancel" class="btn ghost">Abbrechen</button><button value="ok" id="confirmReset" class="btn danger-btn">Zurücksetzen</button></div></form></dialog>
+    <dialog id="statsDialog" class="modal"><form method="dialog" class="modal-shell stats-shell">
+      <div class="modal-head"><div><small>Lernstand</small><h2>Auswertung</h2></div><button class="icon-btn plain" value="cancel" aria-label="Schließen">×</button></div>
+      <div id="statsContent"></div>
+      <p class="source-note">Die Auswertung wird ausschließlich lokal auf diesem Gerät gespeichert. Sie berücksichtigt alle seit dem letzten Zurücksetzen beantworteten Aufgaben.</p>
+    </form></dialog>
 
-    <script src="app.js?v=2"></script>
+    <dialog id="confirmDialog" class="modal"><form method="dialog" class="modal-shell compact-modal">
+      <div class="modal-head"><div><small>Lernstand</small><h2>Zurücksetzen?</h2></div></div><p>Alle auf diesem Gerät gespeicherten Treffer, Fehler und Serien werden gelöscht.</p>
+      <div class="dialog-actions"><button value="cancel" class="btn ghost">Abbrechen</button><button value="ok" id="confirmReset" class="btn danger-btn">Zurücksetzen</button></div>
+    </form></dialog>
+
+    <script src="app.js?v=3"></script>
   </div>
 </body>
 </html>
