@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#101827">
+  <meta name="description" content="Mathematik-Grundwissentrainer für den Beginn der Klasse 8 – Berlin, Sek I.">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>CHH Mathe – Grundwissen Klasse 8</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="styles.css?v=6">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <button class="icon-btn" id="menuBtn" aria-label="Menü öffnen" title="Menü"><span></span><span></span><span></span></button>
+      <div class="brand"><div class="brand-mark">∑</div><div><strong>Mathe Grundwissen</strong><small>Start Klasse 8 · Berlin</small></div></div>
+      <button class="icon-btn calc-shortcut" id="calcShortcut" aria-label="Taschenrechner öffnen" title="Taschenrechner">⌗</button>
+    </header>
+    <main id="mainView" aria-live="polite"></main>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <div id="drawerBackdrop" class="backdrop" hidden></div>
+    <aside id="drawer" class="drawer" aria-label="Hauptmenü" aria-hidden="true">
+      <div class="drawer-head"><div><small>CHH · Mathematik</small><h2>Menü</h2></div><button class="icon-btn plain" id="closeDrawer" aria-label="Menü schließen">×</button></div>
+      <div class="drawer-body scrollable">
+        <div class="drawer-section"><p class="drawer-label">Niveau</p><div class="level-stack" id="drawerLevels">
+          <button data-level="lernen"><b>Lernen</b><span>RLP D · stark gestützt</span></button>
+          <button data-level="g"><b>Grundkurs</b><span>RLP D–E</span></button>
+          <button data-level="e"><b>Erweiterungskurs</b><span>RLP E · anspruchsvoller</span></button>
+        </div></div>
+        <div class="drawer-actions">
+          <button id="menuHome">⌂ <span>Startseite</span></button>
+          <button id="menuStats">▥ <span>Auswertung</span></button>
+          <button id="menuMail">✉ <span>Auswertung senden</span></button>
+          <button id="menuSheet">⎙ <span>Arbeitsblatt als PDF</span></button>
+          <button id="menuCalc">⌗ <span>Taschenrechner</span></button>
+          <button id="menuQr">▦ <span>QR-Code dieser Seite</span></button>
+          <button id="menuRlp">≡ <span>RLP & Themen</span></button>
+          <button id="menuReset">↺ <span>Lernstand zurücksetzen</span></button>
+        </div>
+        <label class="toggle-row" title="Zusatzthemen der Niveaustufe E, deren Behandlung in Klasse 7 von der schulinternen Reihenfolge abhängt."><span><b>Zusatzthemen</b><small>nur wenn bereits behandelt</small></span><input id="advancedToggle" type="checkbox"><i></i></label>
+        <p class="drawer-hint">Eingaben erfolgen über das App-Tastenfeld: Brüche mit <b>/</b> (z. B. 3/4), gemischte Zahlen mit Leerzeichen (z. B. 2 1/2), Dezimalzahlen mit Komma. Über <b>ABC</b> lassen sich Terme und Wörter eingeben.</p>
+      </div>
+      <div class="drawer-foot"><span id="versionLabel">v1.5</span><span>Fortschritt bleibt auf diesem Gerät.</span></div>
+    </aside>
+
+    <dialog id="calcDialog" class="modal calc-modal"><form method="dialog" class="modal-shell scrollable">
+      <div class="modal-head"><div><small>Werkzeug</small><h2>Taschenrechner</h2></div><button class="icon-btn plain" value="cancel" aria-label="Schließen">×</button></div>
+      <div class="calc-display"><div id="calcExpression" class="calc-expression">&nbsp;</div><div id="calcResult" class="calc-result">0</div></div>
+      <div id="calcGrid" class="calc-grid">
+        <button type="button" data-calc="clear" class="danger">C</button><button type="button" data-calc="back">⌫</button><button type="button" data-calc="(">(</button><button type="button" data-calc=")">)</button>
+        <button type="button" data-calc="7">7</button><button type="button" data-calc="8">8</button><button type="button" data-calc="9">9</button><button type="button" data-calc="/" class="op">÷</button>
+        <button type="button" data-calc="4">4</button><button type="button" data-calc="5">5</button><button type="button" data-calc="6">6</button><button type="button" data-calc="*" class="op">×</button>
+        <button type="button" data-calc="1">1</button><button type="button" data-calc="2">2</button><button type="button" data-calc="3">3</button><button type="button" data-calc="-" class="op">−</button>
+        <button type="button" data-calc="0">0</button><button type="button" data-calc=",">,</button><button type="button" data-calc="%">%</button><button type="button" data-calc="+" class="op">+</button>
+        <button type="button" data-calc="sqrt">√</button><button type="button" data-calc="square">x²</button><button type="button" data-calc="pi">π</button><button type="button" data-calc="equals" class="equals">=</button>
+      </div>
+    </form></dialog>
+
+    <dialog id="qrDialog" class="modal"><form method="dialog" class="modal-shell compact-modal scrollable">
+      <div class="modal-head"><div><small>Teilen</small><h2>QR-Code</h2></div><button class="icon-btn plain" value="cancel" aria-label="Schließen">×</button></div>
+      <div id="qrCode" class="qr-box"></div><p class="qr-url" id="qrUrl"></p><p class="muted center">Der Code wird automatisch aus der aktuell geöffneten Website-Adresse erzeugt.</p>
+    </form></dialog>
+
+    <dialog id="infoDialog" class="modal"><form method="dialog" class="modal-shell info-shell scrollable">
+      <div class="modal-head"><div><small>Curriculum</small><h2>RLP & Themen</h2></div><button class="icon-btn plain" value="cancel" aria-label="Schließen">×</button></div>
+      <div class="rlp-summary"><div><b>Lernen</b><span>Niveaustufe D</span></div><div><b>Grundkurs</b><span>D–E</span></div><div><b>Erweiterung</b><span>E</span></div></div>
+      <div class="info-grid">
+        <article><b>Zahlen &amp; Operationen</b><span>Grundrechenarten, Brüche, Dezimalzahlen, Teilbarkeit; E: rationale Zahlen und Prozentrechnung.</span></article>
+        <article><b>Größen &amp; Messen</b><span>Einheiten, Umfang, Fläche, Volumen; maßstäbliche und zusammengesetzte Größen.</span></article>
+        <article><b>Raum &amp; Form</b><span>Winkel, Dreiecke, Symmetrie, Koordinaten, Kongruenz und geometrische Beziehungen.</span></article>
+        <article><b>Gleichungen &amp; Funktionen</b><span>Terme, Gleichungen, direkte Proportionalität; E: Verhältnisgleichungen und indirekte Proportionalität.</span></article>
+        <article><b>Daten &amp; Zufall</b><span>Diagramme, Kennwerte, Häufigkeiten, einfache Zufallsexperimente und Kombinatorik.</span></article>
+        <article><b>BBR-Stil</b><span>Neu formulierte, alltagsbezogene Aufgaben im Stil zentraler Prüfungen – nur mit bereits bekanntem Stoff.</span></article>
+      </div>
+      <p class="source-note">Grundlage: Fachteil C Mathematik des Rahmenlehrplans Berlin-Brandenburg, amtliche Fassung 2023. Die Doppeljahrgangsstufe 7/8 lässt schulinterne Reihenfolgen zu; deshalb sind weiterführende E-Themen standardmäßig ausgeschaltet.</p>
+    </form></dialog>
+
+    <dialog id="statsDialog" class="modal"><form method="dialog" class="modal-shell stats-shell scrollable">
+      <div class="modal-head"><div><small>Lernstand</small><h2>Auswertung</h2></div><button class="icon-btn plain" value="cancel" aria-label="Schließen">×</button></div>
+      <div id="statsContent"></div>
+      <div class="dialog-actions one"><button type="button" id="statsSend" class="btn secondary">✉ Auswertung an die Lehrkraft senden</button></div>
+      <p class="source-note">Die Auswertung wird ausschließlich lokal auf diesem Gerät gespeichert. Sie berücksichtigt alle seit dem letzten Zurücksetzen beantworteten Aufgaben.</p>
+    </form></dialog>
+
+
+    <dialog id="mailDialog" class="modal mail-modal"><form method="dialog" class="modal-shell scrollable">
+      <div class="modal-head"><div><small>Auswertung</small><h2>An die Lehrkraft senden</h2></div><button class="icon-btn plain" value="cancel" aria-label="Schließen">×</button></div>
+      <p class="muted">Empfänger: <b id="mailTo">alexander.goehl@chh.berlin</b>. Die Nachricht wird im E-Mail-Programm vorbereitet und erst dort von dir abgeschickt.</p>
+      <label class="field-label" for="userName">Name</label>
+      <div class="numeric-row">
+        <input id="userName" class="answer-input" type="text" inputmode="none" enterkeyhint="done" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="Vor- und Nachname">
+        <button type="button" id="mailSysKb" class="kb-toggle" title="Gerätetastatur ein-/ausschalten" aria-label="Gerätetastatur ein- oder ausschalten">⌨</button>
+      </div>
+      <div id="mailKeypadHost"></div>
+      <label class="field-label" for="reportText">Diese Auswertung wird gesendet</label>
+      <textarea id="reportText" class="report-text scrollable" readonly rows="8" aria-label="Auswertungstext"></textarea>
+      <p id="mailStatus" class="muted center" role="status" aria-live="polite"></p>
+      <p id="mailSetup" class="setup-note" hidden>Direktversand noch nicht eingerichtet: Formspree-Formular-ID in <code>app.js</code> bei <code>FORMSPREE_ID</code> eintragen.</p>
+      <div class="dialog-actions"><button type="button" id="copyReport" class="btn ghost">Text kopieren</button><button type="button" id="sendReport" class="btn secondary">E-Mail öffnen</button><button type="button" id="postReport" class="btn span-2" hidden>Jetzt senden</button></div>
+    </form></dialog>
+
+
+    <dialog id="sheetDialog" class="modal sheet-modal"><form method="dialog" class="modal-shell scrollable">
+      <div class="modal-head"><div><small>Arbeitsblatt</small><h2>Aufgaben als PDF</h2></div><button class="icon-btn plain" value="cancel" aria-label="Schließen">×</button></div>
+      <div id="sheetOptions"></div>
+      <label class="toggle-row"><span><b>Lösungskasten am Ende</b><small>richtige und ebenso viele falsche Ergebnisse, gemischt</small></span><input id="sheetSolutions" type="checkbox" checked><i></i></label>
+      <p class="muted">Es öffnet sich der Druckdialog des Geräts. Dort als Ziel <b>„Als PDF speichern“</b> (bzw. „Microsoft Print to PDF“) wählen.</p>
+      <p id="sheetStatus" class="muted center" role="status" aria-live="polite"></p>
+      <div class="dialog-actions one"><button type="button" id="printSheetBtn" class="btn">⎙ Arbeitsblatt erstellen</button></div>
+    </form></dialog>
+
+    <dialog id="confirmDialog" class="modal"><form method="dialog" class="modal-shell compact-modal">
+      <div class="modal-head"><div><small>Lernstand</small><h2>Zurücksetzen?</h2></div></div><p class="muted">Alle auf diesem Gerät gespeicherten Treffer, Fehler und Serien werden gelöscht.</p>
+      <div class="dialog-actions"><button value="cancel" class="btn ghost">Abbrechen</button><button value="ok" id="confirmReset" class="btn danger-btn">Zurücksetzen</button></div>
+    </form></dialog>
+
+    <script src="app.js?v=6"></script>
+  </div>
+  <div id="printSheet" aria-hidden="true"></div>
+</body>
+</html>
