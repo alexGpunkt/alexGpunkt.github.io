@@ -1,0 +1,10 @@
+{
+  "name": "Puente – Ayuda con trámites",
+  "short_name": "Puente",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f4f7fa",
+  "theme_color": "#12385b",
+  "lang": "es",
+  "description": "Asistente bilingüe para preparar trámites en Alemania."
+}
