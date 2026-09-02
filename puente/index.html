@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#12385b">
+  <meta name="description" content="Navegador bilingüe de trámites para personas hispanohablantes en Alemania.">
+  <title>Puente · Ayuda con trámites</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <button id="homeBtn" class="brand-btn" aria-label="Inicio">
+      <span class="brand-mark">P</span>
+      <span><strong>Puente</strong><small id="brandSubtitle">Ayuda con trámites en Alemania</small></span>
+    </button>
+    <div class="top-actions">
+      <button id="langBtn" class="chip" type="button">DE</button>
+      <button id="privacyBtn" class="icon-btn" type="button" aria-label="Privacidad">🔒</button>
+    </div>
+  </header>
+
+  <main id="app" class="app-shell" aria-live="polite"></main>
+
+  <nav class="bottom-nav" aria-label="Navegación">
+    <button data-route="home" class="nav-btn active"><span>🏠</span><small data-i18n="navHome">Inicio</small></button>
+    <button data-route="assistant" class="nav-btn"><span>🧭</span><small data-i18n="navAssistant">Asistente</small></button>
+    <button data-route="case" class="nav-btn"><span>📎</span><small id="caseNavLabel">Caso</small></button>
+    <button data-route="docs" class="nav-btn"><span>📂</span><small data-i18n="navDocs">Documentos</small></button>
+    <button data-route="lost" class="nav-btn"><span>🔥</span><small data-i18n="navLost">Perdidos</small></button>
+  </nav>
+
+  <dialog id="modal" class="modal">
+    <form method="dialog" class="modal-card">
+      <div class="modal-head">
+        <h2 id="modalTitle"></h2>
+        <button class="icon-btn" value="cancel" aria-label="Cerrar">✕</button>
+      </div>
+      <div id="modalBody"></div>
+    </form>
+  </dialog>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
